@@ -1,0 +1,7 @@
+@main {
+.start:
+  x: int = const 4;
+  jmp .label;
+.label:
+  print x;
+}

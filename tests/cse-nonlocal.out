@@ -1,0 +1,9 @@
+@main {
+.start:
+  x: int = const 4;
+  sum1: int = add x x;
+  jmp .label;
+.label:
+  sum2: int = id sum1;
+  print sum1;
+}

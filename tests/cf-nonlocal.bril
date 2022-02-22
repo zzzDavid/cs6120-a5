@@ -1,0 +1,9 @@
+# CMD: bril2json < {filename} | python ../main.py -cf | bril2txt
+@main {
+  x: int = const 4;
+  sum1: int = add x x;
+  jmp .label;
+.label:
+  sum2: int = add x x;
+  print sum2;
+}
