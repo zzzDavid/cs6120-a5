@@ -26,6 +26,70 @@ def find_dominators(cfg):
         if not changed: break
     return dom
 
+class Node():
+    def __init__(self, name) -> None:
+        self.name = name
+        self.preds = []
+        self.succs = []
+
+def find_dom_tree(dom, cfg):
+    """
+    A dominator tree is a tree where each node's children are 
+    those nodes it immediately dominates. Because the immediate 
+    dominator is unique, it is a tree. The start node is the 
+    root of the tree.
+    
+    - dom: dict(str, set(str))
+    - cfg: dict(str, BasicBlock)
+    - return: dict(str, Node)
+    """
+    dom_tree = dict()
+    for vertex in cfg.keys():
+        # find immediate dominators
+        dominators = copy.deepcopy(dom[vertex])
+        dominators.remove(vertex)
+        idom = list()
+        for d in dominators:
+            # if the dominator's strict dominator is also in the set dominator
+            # then it's not immediate dominator
+            d_strict_doms = copy.deepcopy(dom[d])
+            d_strict_doms.remove(d)
+            if any([dd in dominators for dd in d_strict_doms]):
+                continue
+            idom.append(d)
+            
+        for parent in idom:
+            if vertex not in dom_tree:
+                dom_tree[vertex] = Node(vertex)
+            if parent not in dom_tree:
+                dom_tree[parent] = Node(parent)
+            dom_tree[parent].succs.append(vertex)
+            dom_tree[vertex].preds.append(parent)
+    return dom_tree
+
+def find_dom_frontier(dom, cfg):
+    """
+    The dominance frontier of a node d is the set of all 
+    nodes ni such that d dominates an immediate predecessor
+    of ni, but d does not strictly dominate ni. It is the
+    set of nodes where d's dominance stops.
+    """
+    dom_frontier = dict()
+    for vertex in cfg.keys():
+        dom_frontier[vertex] = set()
+        # find all nodes that are dominated by vertex
+        domed = list()
+        for v, dominators in dom.items():
+            if vertex in dominators:
+                domed.append(v)
+        for d in domed:
+            # if d's successor is not dominated by vertex
+            # it's on the frontier
+            for successor in cfg[d].succ:
+                if successor not in domed:
+                    dom_frontier[vertex].add(successor)
+    return dom_frontier
+
 def main(file=None):
     # read from file because it's easier to debug this way
     if file is not None:
@@ -39,8 +103,11 @@ def main(file=None):
         blocks = [b for b in blocks if len(b) > 0]
         cfg = CFG(blocks).cfg
         dom = find_dominators(cfg)
+        dom_tree = find_dom_tree(dom, cfg)
+        dom_frontier = find_dom_frontier(dom, cfg)
         print(dom)
-        
+        print(dom_tree)
+        print(dom_frontier)
 
 
 if __name__ == "__main__":
