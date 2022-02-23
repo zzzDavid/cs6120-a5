@@ -101,6 +101,9 @@ def main(file=None):
         blocks = form_basic_blocks(func['instrs'])
         blocks = [b for b in blocks if len(b) > 0]
         cfg = CFG(blocks).cfg
+        from visualizer import CFGVisualizer
+        cfg_visualizer = CFGVisualizer(cfg)
+        cfg_visualizer.show()
         dom = find_dominators(cfg)
         dom_tree = find_dom_tree(dom, cfg)
         dom_frontier = find_dom_frontier(dom, cfg)
