@@ -72,3 +72,24 @@ class CFGVisualizer(object):
     
     def show(self):
         self.dot.render(view=True)
+
+class DomTreeVisualizer(object):
+    """
+    - domtree: dict(str, Node)
+    """
+    def __init__(self, dom_tree):
+        self.dom_tree = dom_tree
+        self.dot = Digraph('dom tree')
+        self.build()
+
+    def build(self):
+        # build nodes
+        for vertex in self.dom_tree.keys():
+            self.dot.node(vertex, vertex)
+        # build edges
+        for vertex, node in self.dom_tree.items():
+            for succ in node.succs:
+                self.dot.edge(vertex, succ)
+    
+    def show(self):
+        self.dot.render(view=True)
