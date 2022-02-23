@@ -30,11 +30,25 @@ class CFG(object):
             self.labels.append(label)
 
         # add succ and pred to the basic blocks
-        for label, bb in self.cfg.items():
+        labels = list(self.cfg.keys())
+        for idx, label in enumerate(labels):
+            bb = self.cfg[label]
             # check the ternimator instr
             op = bb.instrs[-1]['op']
-            if op not in TERMINATORS: continue
-            if op == "jmp":
+            if op not in TERMINATORS:
+                # natural terminator
+                if idx == len(labels) -1 :
+                    # end of function
+                    continue
+                else:
+                    jmp_target = self.cfg[labels[idx + 1]].instrs[0]['label']
+                    if self.reverse:
+                        self.cfg[label].pred.append(jmp_target)
+                        self.cfg[jmp_target].succ.append(label)
+                    else:
+                        self.cfg[label].succ.append(jmp_target)
+                        self.cfg[jmp_target].pred.append(label)
+            elif op == "jmp":
                 jmp_target = bb.instrs[-1]['labels'][0]
                 if self.reverse:
                     self.cfg[label].pred.append(jmp_target)

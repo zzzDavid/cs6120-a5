@@ -50,14 +50,22 @@ def find_dom_tree(dom, cfg):
         dominators.remove(vertex)
         idom = list()
         for d in dominators:
-            # if the dominator's strict dominator is also in the set dominator
-            # then it's not immediate dominator
-            d_strict_doms = copy.deepcopy(dom[d])
-            d_strict_doms.remove(d)
-            if any([dd in dominators for dd in d_strict_doms]):
-                continue
-            idom.append(d)
-            
+            # find all nodes that are dominated by d
+            domed = list()
+            for v, doms in dom.items():
+                if d in doms:
+                    domed.append(v)
+            # if a vertex's dominator doesn't dominate
+            # other vertex's dominator, then it's an
+            # immediate dominator
+            immediate = True
+            for dd in dominators:
+                if dd == d: continue
+                if dd in domed: 
+                    immediate = False
+                    break
+            if immediate:
+                idom.append(d)
         for parent in idom:
             if vertex not in dom_tree:
                 dom_tree[vertex] = Node(vertex)
