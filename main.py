@@ -113,6 +113,12 @@ def main(file=None):
         cfg_visualizer = CFGVisualizer(cfg, func['name'] + '-cfg')
         cfg_visualizer.show()
         dom = find_dominators(cfg)
+        from verifier import DominatorVerifier
+        dom_verifier = DominatorVerifier(cfg, dom)
+        if dom_verifier.verify():
+            print("ok")
+        else:
+            print("not ok")
         dom_tree = find_dom_tree(dom, cfg)
         dom_tree_vis = DomTreeVisualizer(dom_tree, func['name'] + '-domtree')
         dom_tree_vis.show()

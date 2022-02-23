@@ -29,6 +29,11 @@ class DominatorVerifier(object):
         Recursively find target vertex in "start"'s
         upstream vetices (DFS)
         """
+        # self-relexive
+        if start == target:
+            self.present.append(True)
+            return
+
         if len(self.cfg[start].pred) == 0:
             # we've reached the root node
             self.present.append(False)
