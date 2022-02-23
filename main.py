@@ -91,7 +91,6 @@ def find_dom_frontier(dom, cfg):
     return dom_frontier
 
 def main(file=None):
-    # read from file because it's easier to debug this way
     if file is not None:
         with open(file, "r") as infile:
            prog = json.load(infile)
