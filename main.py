@@ -5,6 +5,10 @@ import sys
 
 from basic_block import form_basic_blocks
 from control_flow_graph import *
+from dominance_with_worklist import find_dominator_worklist, worklist_algo
+from verifier import DominatorVerifier
+from visualizer import CFGVisualizer, DomTreeVisualizer
+
 
 def find_dominators(cfg):
     """
@@ -109,11 +113,11 @@ def main(file=None):
         blocks = form_basic_blocks(func['instrs'])
         blocks = [b for b in blocks if len(b) > 0]
         cfg = CFG(blocks).cfg
-        from visualizer import CFGVisualizer, DomTreeVisualizer
         cfg_visualizer = CFGVisualizer(cfg, func['name'] + '-cfg')
         cfg_visualizer.show()
         dom = find_dominators(cfg)
-        from verifier import DominatorVerifier
+        dom_alternate = find_dominator_worklist(cfg)
+        print(dom_alternate)
         dom_verifier = DominatorVerifier(cfg, dom)
         if dom_verifier.verify():
             print("ok")
