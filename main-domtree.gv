@@ -1,9 +1,0 @@
-digraph "main-domtree" {
-	left [label=left]
-	start [label=start]
-	right [label=right]
-	end [label=end]
-	start -> left
-	start -> right
-	start -> end
-}
