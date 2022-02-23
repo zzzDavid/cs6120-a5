@@ -1,2 +1,4 @@
 *.json
+*.pdf
+*.gv
 __pycache__/*
