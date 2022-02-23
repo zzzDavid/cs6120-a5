@@ -104,7 +104,15 @@ def find_dom_frontier(dom, cfg):
                     dom_frontier[vertex].add(successor)
     return dom_frontier
 
-def main(file=None):
+def main(args):
+    # get options
+    domtree = args.domtree
+    frontier = args.frontier
+    worklist = args.worklist
+    verify = args.verify
+    viz = args.visualize
+    file = args.filename
+
     if file is not None:
         with open(file, "r") as infile:
            prog = json.load(infile)
@@ -115,49 +123,50 @@ def main(file=None):
         blocks = form_basic_blocks(func['instrs'])
         blocks = [b for b in blocks if len(b) > 0]
         cfg = CFG(blocks).cfg
-        cfg_visualizer = CFGVisualizer(cfg, func['name'] + '-cfg')
-        cfg_visualizer.show()
-        dom = find_dominators(cfg)
-        dom_alternate = find_dominator_worklist(cfg)
-        print(dom_alternate)
-        dom_verifier = DominatorVerifier(cfg, dom)
-        if dom_verifier.verify():
-            print("ok")
+        if viz:        
+            cfg_visualizer = CFGVisualizer(cfg, func['name'] + '-cfg')
+            cfg_visualizer.show()
+
+        if worklist:
+            dom = find_dominator_worklist(cfg)
         else:
-            print("not ok")
-        dom_tree = find_dom_tree(dom, cfg)
-        dom_tree_vis = DomTreeVisualizer(dom_tree, func['name'] + '-domtree')
-        dom_tree_vis.show()
-        dom_frontier = find_dom_frontier(dom, cfg)
-        print(dom)
-        print(dom_tree)
-        print(dom_frontier)
+            dom = find_dominators(cfg)
+        
+        if verify:
+            dom_verifier = DominatorVerifier(cfg, dom)
+            if dom_verifier.verify():
+                print("dom ok")
+            else:
+                print("dom not ok")
+
+        if domtree:
+            dom_tree = find_dom_tree(dom, cfg)
+            if viz:
+                dom_tree_vis = DomTreeVisualizer(dom_tree, func['name'] + '-domtree')
+                dom_tree_vis.show()
+        
+        if frontier:
+            dom_frontier = find_dom_frontier(dom, cfg)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-reach', dest='reach_definitions',
+    parser.add_argument('-domtree', dest='print dominance tree',
                         default=False, action='store_true',
-                        help='reach definitions')
-    parser.add_argument('-live', dest='live_variable',
+                        help='print dominance tree')
+    parser.add_argument('-frontier', dest='print dominance frontier',
                         default=False, action='store_true',
-                        help='live_variable')
-    parser.add_argument('-const_prop', dest='const_prop',
+                        help='print dominance frontier')
+    parser.add_argument('-worklist', dest='worklist',
                         default=False, action='store_true',
-                        help='Constant propagation')
-    parser.add_argument('-cse', dest='cse',
+                        help='use worklist algorithm to find dominator')
+    parser.add_argument('-verify', dest='verify',
                         default=False, action='store_true',
-                        help='CSE')
-    parser.add_argument('-cf', dest='cf',
+                        help='verify dominance result')
+    parser.add_argument('-visualize', dest='visualize',
                         default=False, action='store_true',
-                        help='constant folding')
+                        help='visualize results')
     parser.add_argument('-f', dest='filename', 
                         action='store', type=str, help='json file')
     args = parser.parse_args()
-    reach = args.reach_definitions
-    live = args.live_variable
-    const_prop = args.const_prop
-    cse = args.cse
-    cf = args.cf
-    file = args.filename
-    main(file)
+    main(args)
