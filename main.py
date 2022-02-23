@@ -94,6 +94,8 @@ def find_dom_frontier(dom, cfg):
         for v, dominators in dom.items():
             if vertex in dominators:
                 domed.append(v)
+        # strictly dominate
+        domed.remove(vertex)
         for d in domed:
             # if d's successor is not dominated by vertex
             # it's on the frontier

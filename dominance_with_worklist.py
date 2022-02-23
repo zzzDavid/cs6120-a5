@@ -21,7 +21,6 @@ def worklist_algo(cfg, merge_func, transfer_func, printer=None):
         bb = worklist.pop(label)
         bb_ins = [outs[label] for label in bb.pred]
         bb_ins_merged = merge_func(bb_ins)
-        import ipdb; ipdb.set_trace()
         ins[label] = bb_ins_merged
         bb_outs  = transfer_func(bb, bb_ins_merged)
         if len(bb_outs) != len(outs[label]):
