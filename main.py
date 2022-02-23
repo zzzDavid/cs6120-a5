@@ -102,11 +102,11 @@ def main(file=None):
         blocks = [b for b in blocks if len(b) > 0]
         cfg = CFG(blocks).cfg
         from visualizer import CFGVisualizer, DomTreeVisualizer
-        cfg_visualizer = CFGVisualizer(cfg)
-        # cfg_visualizer.show()
+        cfg_visualizer = CFGVisualizer(cfg, func['name'] + '-cfg')
+        cfg_visualizer.show()
         dom = find_dominators(cfg)
         dom_tree = find_dom_tree(dom, cfg)
-        dom_tree_vis = DomTreeVisualizer(dom_tree)
+        dom_tree_vis = DomTreeVisualizer(dom_tree, func['name'] + '-domtree')
         dom_tree_vis.show()
         dom_frontier = find_dom_frontier(dom, cfg)
         print(dom)

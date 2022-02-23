@@ -52,9 +52,9 @@ class CFGVisualizer(object):
     """
     - cfg: dict(str, BasicBlock)
     """
-    def __init__(self, cfg) -> None:
+    def __init__(self, cfg, name) -> None:
         self.cfg = cfg
-        self.dot = Digraph('cfg', node_attr={'shape': 'rectangle'})
+        self.dot = Digraph(name, node_attr={'shape': 'rectangle'})
         self.build()        
 
     def build(self):
@@ -77,9 +77,9 @@ class DomTreeVisualizer(object):
     """
     - domtree: dict(str, Node)
     """
-    def __init__(self, dom_tree):
+    def __init__(self, dom_tree, name):
         self.dom_tree = dom_tree
-        self.dot = Digraph('dom tree')
+        self.dot = Digraph(name)
         self.build()
 
     def build(self):
