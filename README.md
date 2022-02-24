@@ -19,6 +19,12 @@ optional arguments:
   -f FILENAME  json file
 ```
 
+Run with Bril utilities:
+
+```
+$ bril2json < dom/*.bril | python main.py {-arg} 
+```
+
 To run all tests with `turnt`: 
 ```
 ❯ turnt dom/*.bril
@@ -38,6 +44,8 @@ A new thing for me is that a vertex's dominance frontier can contain itself.
 I implemented a verifier to check if the domination relation is correct. For a given vertex and its dominators, the verifier visits all the predecessors of the vertex and make sure every upstream path goes through every dominator. If any upstream path doesn't go through a dominator when it meets the root (entry) block, the verification fails.
 
 ## CFG and Dominance Tree Visualization
+
+I find graphviz is a great visualizer for CFGs. This repo comes with a visualizer that plots CFG and Basic Blocks for any given Bril function. 
 
 <p align="center">
 <img width=80% alt="Screen Shot 2022-02-23 at 21 57 20" src="https://user-images.githubusercontent.com/33577135/155449254-fc60c859-3c5a-4293-b05c-af66eed0b445.png">
