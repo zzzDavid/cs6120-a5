@@ -1,4 +1,4 @@
-# ARGS: tree
+# ARGS: -domtree
 @main {
 .entry:
   x: int = const 0;

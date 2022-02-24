@@ -106,6 +106,7 @@ def find_dom_frontier(dom, cfg):
 
 def main(args):
     # get options
+    dom_print = args.dom
     domtree = args.domtree
     frontier = args.frontier
     worklist = args.worklist
@@ -131,6 +132,10 @@ def main(args):
             dom = find_dominator_worklist(cfg)
         else:
             dom = find_dominators(cfg)
+
+        if dom_print:
+            # frontier printer also works for dom
+            frontier_printer(dom)
         
         if verify:
             dom_verifier = DominatorVerifier(cfg, dom)
@@ -152,6 +157,9 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument('-dom', dest='dom',
+                        default=False, action='store_true',
+                        help='print dominator')
     parser.add_argument('-domtree', dest='domtree',
                         default=False, action='store_true',
                         help='print dominance tree')
