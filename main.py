@@ -8,7 +8,7 @@ from control_flow_graph import *
 from dominance_with_worklist import find_dominator_worklist, worklist_algo
 from verifier import DominatorVerifier
 from visualizer import CFGVisualizer, DomTreeVisualizer
-
+from printer import dom_tree_printer, frontier_printer
 
 def find_dominators(cfg):
     """
@@ -144,17 +144,18 @@ def main(args):
             if viz:
                 dom_tree_vis = DomTreeVisualizer(dom_tree, func['name'] + '-domtree')
                 dom_tree_vis.show()
+            dom_tree_printer(dom_tree)
         
         if frontier:
             dom_frontier = find_dom_frontier(dom, cfg)
-
+            frontier_printer(dom_frontier)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-domtree', dest='print dominance tree',
+    parser.add_argument('-domtree', dest='domtree',
                         default=False, action='store_true',
                         help='print dominance tree')
-    parser.add_argument('-frontier', dest='print dominance frontier',
+    parser.add_argument('-frontier', dest='frontier',
                         default=False, action='store_true',
                         help='print dominance frontier')
     parser.add_argument('-worklist', dest='worklist',
